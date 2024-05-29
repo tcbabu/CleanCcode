@@ -746,6 +746,13 @@
 		        " <-s start  offset> "
 		        " <-o outfile> "
 		        " [inputfile] \n" ,*Name) ;
+       fprintf (stderr, "cleancc is a C code cleaner with proper indentation.\n"
+                        "Try it with a backup of the code .\n"
+                        " Options can be seen with '-h/--help'\n"
+                        " Incode declarions are thre to skip cleaning portions by\n"
+                        " #define D_NOCLEANCC and\n"
+                        " #define D_CLEANCC\n"
+                        " by default D_CLEANCC is defined\n");
           
       exit ( 0 ) ;
   }
