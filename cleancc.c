@@ -747,13 +747,22 @@
 		        " <-s start  offset> "
 		        " <-o outfile> "
 		        " [inputfile] \n" ,*Name) ;
-       fprintf (stderr, "cleancc is a C code cleaner with proper indentation.\n"
-                        "Try it with a backup of the code .\n"
-                        " Options can be seen with '-h/--help'\n"
-                        " Incode declarions are thre to skip cleaning portions by\n"
-                        " #define D_NOCLEANCC and\n"
-                        " #define D_CLEANCC\n"
-                        " by default D_CLEANCC is defined\n");
+       fprintf(stderr,"cleancc is a C code cleaner with proper indentation.\n"
+                      "Try it with a backup of the code .\n"
+                      "Options can be seen with '-h/--help'\n"
+                      "In-code declarations are there to skip cleaning portions\n"
+                      "by \n"
+                      "#define D_NOCLEANCC and \n"
+                      "#define D_CLEANCC\n"
+                      "by default D_CLEANCC is defined\n"
+                      "Sometimes 'cleancc' may report 'brackets not matching'\n"
+                      "It can be due to conditional code parts\n"
+                      "add sufficient extra brackets with in\n"
+                      "#if 0\n"
+                      "}\n"
+                      "...\n"
+                      "#endif\n"
+                      "It won't affect your code.\n");
           
       exit ( 0 ) ;
   }
