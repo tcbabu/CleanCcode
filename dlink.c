@@ -22,9 +22,9 @@
   Dlink * Dopen ( void ) {
       Dlink *tmp;
       tmp = ( Dlink * ) malloc ( sizeof ( Dlink ) ) ;
-      tmp-> st = NULL;
-      tmp-> en = NULL;
-      tmp-> cr = NULL;
+      tmp->st = NULL;
+      tmp->en = NULL;
+      tmp->cr = NULL;
       return ( tmp ) ;
   }
 /* Ddup duplicates a link L to Dup to
@@ -32,9 +32,9 @@
    This call is thread safe
 */
   int Ddup ( Dlink *L , Dlink *Dup ) {
-      Dup-> st = L-> st;
-      Dup-> en = L-> en;
-      Dup-> cr = L-> st;
+      Dup->st = L->st;
+      Dup->en = L->en;
+      Dup->cr = L->st;
       return 1;
   }
   int Dappend ( Dlink *F , void *buf ) {
@@ -43,25 +43,25 @@
           printf ( "Error: Trying to append a NULL list\n" ) ;
           exit ( 0 ) ;
       }
-      LN = F-> en;
+      LN = F->en;
       if ( LN == ( ( void * ) 0 ) ) {
           LN = ( struct d_l * ) malloc ( sizeof ( struct d_l ) ) ;
-          F-> st = LN;
-          F-> en = LN;
-          F-> cr = F-> en;
-          LN-> nx = ( ( struct d_l * ) 0 ) ;
-          LN-> pv = ( ( struct d_l * ) 0 ) ;
-          LN-> bf = buf;
+          F->st = LN;
+          F->en = LN;
+          F->cr = F->en;
+          LN->nx = ( ( struct d_l * ) 0 ) ;
+          LN->pv = ( ( struct d_l * ) 0 ) ;
+          LN->bf = buf;
       }
       else{
-          LN-> nx = ( struct d_l * ) malloc ( sizeof ( struct d_l ) ) ;
+          LN->nx = ( struct d_l * ) malloc ( sizeof ( struct d_l ) ) ;
           tmp = LN;
-          LN = LN-> nx;
-          LN-> pv = tmp;
-          LN-> nx = ( ( struct d_l * ) 0 ) ;
-          LN-> bf = buf;
-          F-> en = LN;
-          F-> cr = F-> en;
+          LN = LN->nx;
+          LN->pv = tmp;
+          LN->nx = ( ( struct d_l * ) 0 ) ;
+          LN->bf = buf;
+          F->en = LN;
+          F->cr = F->en;
       }
       return 1;
   }
@@ -73,10 +73,10 @@
       int i , j;
       D_l *LN , *tmp;
       if ( F == NULL ) return;
-      LN = F-> st;
+      LN = F->st;
       while ( LN != ( ( void * ) 0 ) ) {
-          tmp = LN-> nx;
-          if ( LN-> bf != ( void * ) 0 ) free ( LN-> bf ) ; free ( LN ) ;
+          tmp = LN->nx;
+          if ( LN->bf != ( void * ) 0 ) free ( LN->bf ) ; free ( LN ) ;
           LN = tmp;
       }
       free ( F ) ;
@@ -91,9 +91,9 @@
       int i , j;
       D_l *LN , *tmp;
       if ( F == NULL ) return;
-      LN = F-> st;
+      LN = F->st;
       while ( LN != ( ( void * ) 0 ) ) {
-          tmp = LN-> nx;
+          tmp = LN->nx;
           free ( LN ) ;
           LN = tmp;
       }
@@ -101,10 +101,10 @@
       F = NULL;
   }
   void Drewind ( Dlink *F ) {
-      if ( F != NULL ) F-> cr = F-> st;
+      if ( F != NULL ) F->cr = F->st;
   }
   void Dend ( Dlink *F ) {
-      if ( F != NULL ) F-> cr = F-> en;
+      if ( F != NULL ) F->cr = F->en;
   }
   void Dmove_back ( Dlink *LN , int n ) {
       int i;
@@ -113,14 +113,14 @@
           printf ( "Error: Empty list:Dmove_back\n" ) ;
           exit ( 0 ) ;
       }
-      if ( LN-> cr == LN-> st ) return;
-      if ( LN-> st == ( ( void * ) 0 ) ) return;
-      if ( LN-> cr == ( ( void * ) 0 ) ) { LN-> cr = LN-> en;n--;}
-      pt = LN-> cr-> pv;
+      if ( LN->cr == LN->st ) return;
+      if ( LN->st == ( ( void * ) 0 ) ) return;
+      if ( LN->cr == ( ( void * ) 0 ) ) { LN->cr = LN->en;n--;}
+      pt = LN->cr->pv;
       for ( i = 0; i < n;i++ ) {
           if ( pt == ( ( void * ) 0 ) ) break;
-          LN-> cr = pt;
-          pt = LN-> cr-> pv;
+          LN->cr = pt;
+          pt = LN->cr->pv;
       }
   }
   void Dmove_forward ( Dlink *LN , int n ) {
@@ -130,12 +130,12 @@
           printf ( "Error: Empty list:Dmove_forward\n" ) ;
           exit ( 0 ) ;
       }
-      if ( LN-> en == LN-> cr ) return;
-      pt = LN-> cr-> nx;
+      if ( LN->en == LN->cr ) return;
+      pt = LN->cr->nx;
       for ( i = 0; i < n;i++ ) {
           if ( pt == ( ( void * ) 0 ) ) break;
-          LN-> cr = pt;
-          pt = LN-> cr-> nx;
+          LN->cr = pt;
+          pt = LN->cr->nx;
       }
   }
 /*
@@ -154,28 +154,28 @@
           exit ( 0 ) ;
       }
       if ( n <= 0 ) return;
-      if ( LN-> cr == ( ( void * ) 0 ) ) return;
-      pt = LN-> cr-> nx;
-      pv = LN-> cr-> pv;
+      if ( LN->cr == ( ( void * ) 0 ) ) return;
+      pt = LN->cr->nx;
+      pv = LN->cr->pv;
       for ( i = 0; i < n;i++ ) {
   /*if (pt== ((void *)0) ) break;*/
-          free ( LN-> cr-> bf ) ;
-          free ( LN-> cr ) ;
-          if ( pt == ( ( void * ) 0 ) ) {LN-> cr = ( void * ) 0; break;}
-          LN-> cr = pt;
-          pt = LN-> cr-> nx;
+          free ( LN->cr->bf ) ;
+          free ( LN->cr ) ;
+          if ( pt == ( ( void * ) 0 ) ) {LN->cr = ( void * ) 0; break;}
+          LN->cr = pt;
+          pt = LN->cr->nx;
       }
-      pt = LN-> cr;
+      pt = LN->cr;
       if ( i < n ) {
-          if ( pv != ( ( struct d_l * ) 0 ) ) {LN-> cr = pv;
-          pv-> nx = ( ( struct d_l * ) 0 ) ;LN-> en = pv;}
-          else { LN-> cr = ( ( D_l * ) 0 ) ; LN-> st = ( 
-              ( D_l * ) 0 ) ; LN-> en = ( ( D_l * ) 0 ) ;}
+          if ( pv != ( ( struct d_l * ) 0 ) ) {LN->cr = pv;
+          pv->nx = ( ( struct d_l * ) 0 ) ;LN->en = pv;}
+          else { LN->cr = ( ( D_l * ) 0 ) ; LN->st = ( 
+              ( D_l * ) 0 ) ; LN->en = ( ( D_l * ) 0 ) ;}
       }
       else {
-          if ( pv != ( ( void * ) 0 ) ) pv-> nx = pt;
-          else {LN-> cr-> pv = ( ( struct d_l * ) 0 ) ;LN-> st = LN-> cr;}
-          if ( pt != ( ( void * ) 0 ) ) pt-> pv = pv;
+          if ( pv != ( ( void * ) 0 ) ) pv->nx = pt;
+          else {LN->cr->pv = ( ( struct d_l * ) 0 ) ;LN->st = LN->cr;}
+          if ( pt != ( ( void * ) 0 ) ) pt->pv = pv;
       }
   }
   void Ddelete ( Dlink *LN ) {
@@ -193,27 +193,27 @@
           printf ( "Error: Empty list:Dpick\n" ) ;
           exit ( 0 ) ;
       }
-      if ( LN-> cr == ( ( void * ) 0 ) ) return NULL;
-      pt = LN-> cr-> nx;
-      pv = LN-> cr-> pv;
+      if ( LN->cr == ( ( void * ) 0 ) ) return NULL;
+      pt = LN->cr->nx;
+      pv = LN->cr->pv;
       for ( i = 0; i < n;i++ ) {
-          tmp = ( void * ) ( LN-> cr-> bf ) ;
-          free ( LN-> cr ) ;
+          tmp = ( void * ) ( LN->cr->bf ) ;
+          free ( LN->cr ) ;
           if ( pt == ( ( void * ) 0 ) ) break;
-          LN-> cr = pt;
-          pt = LN-> cr-> nx;
+          LN->cr = pt;
+          pt = LN->cr->nx;
       }
-      pt = LN-> cr;
+      pt = LN->cr;
       if ( i < n ) {
-          if ( pv != ( ( D_l * ) 0 ) ) {LN-> cr = pv;pv-> nx = 
-              ( ( struct d_l * ) 0 ) ;LN-> en = pv;}
-          else { LN-> cr = ( ( D_l * ) 0 ) ; LN-> st = ( 
-              ( D_l * ) 0 ) ; LN-> en = ( ( D_l * ) 0 ) ;}
+          if ( pv != ( ( D_l * ) 0 ) ) {LN->cr = pv;pv->nx = 
+              ( ( struct d_l * ) 0 ) ;LN->en = pv;}
+          else { LN->cr = ( ( D_l * ) 0 ) ; LN->st = ( 
+              ( D_l * ) 0 ) ; LN->en = ( ( D_l * ) 0 ) ;}
       }
       else {
-          if ( pv != ( ( void * ) 0 ) ) pv-> nx = pt;
-          else {LN-> cr-> pv = ( ( struct d_l * ) 0 ) ;LN-> st = LN-> cr;}
-          if ( pt != ( ( void * ) 0 ) ) pt-> pv = pv;
+          if ( pv != ( ( void * ) 0 ) ) pv->nx = pt;
+          else {LN->cr->pv = ( ( struct d_l * ) 0 ) ;LN->st = LN->cr;}
+          if ( pt != ( ( void * ) 0 ) ) pt->pv = pv;
       }
       return tmp;
   }
@@ -223,21 +223,21 @@
           printf ( "Error: Empty list:Dinsert\n" ) ;
           exit ( 0 ) ;
       }
-      if ( F-> cr == ( ( void * ) 0 ) ) F-> cr = F-> en;
-      if ( ( F-> st == ( ( void * ) 0 ) ) || ( F-> cr == ( ( void * ) 0 ) ) ) {
+      if ( F->cr == ( ( void * ) 0 ) ) F->cr = F->en;
+      if ( ( F->st == ( ( void * ) 0 ) ) || ( F->cr == ( ( void * ) 0 ) ) ) {
           Dappend ( F , buf ) ;
           return;
       }
       else {
-          LN = F-> cr;
+          LN = F->cr;
           tmp = ( struct d_l * ) malloc ( sizeof ( struct d_l ) ) ;
-          tmp-> nx = LN;
-          tmp-> pv = LN-> pv;
-          tmp-> bf = buf;
-          if ( tmp-> pv == ( ( void * ) 0 ) ) { F-> st = tmp; }
-          else {tmp-> pv-> nx = tmp;}
-          F-> cr = tmp;
-          LN-> pv = tmp;
+          tmp->nx = LN;
+          tmp->pv = LN->pv;
+          tmp->bf = buf;
+          if ( tmp->pv == ( ( void * ) 0 ) ) { F->st = tmp; }
+          else {tmp->pv->nx = tmp;}
+          F->cr = tmp;
+          LN->pv = tmp;
       }
   }
   void Dadd ( Dlink *F , void *buf ) {
@@ -246,30 +246,30 @@
           printf ( "Error: Empty list:Dadd\n" ) ;
           exit ( 0 ) ;
       }
-      if ( F-> en == F-> cr ) F-> cr = ( ( D_l * ) 0 ) ;
-      if ( ( F-> st == ( ( void * ) 0 ) ) || ( F-> cr == ( ( void * ) 0 ) ) ) {
+      if ( F->en == F->cr ) F->cr = ( ( D_l * ) 0 ) ;
+      if ( ( F->st == ( ( void * ) 0 ) ) || ( F->cr == ( ( void * ) 0 ) ) ) {
           Dappend ( F , buf ) ;
           return;
       }
       else {
-          LN = F-> cr-> nx;
+          LN = F->cr->nx;
           tmp = ( struct d_l * ) malloc ( sizeof ( struct d_l ) ) ;
-          tmp-> nx = LN;
-          tmp-> pv = LN-> pv;
-          tmp-> bf = buf;
-          tmp-> pv-> nx = tmp;
-          F-> cr = tmp;
-          LN-> pv = tmp;
+          tmp->nx = LN;
+          tmp->pv = LN->pv;
+          tmp->bf = buf;
+          tmp->pv->nx = tmp;
+          F->cr = tmp;
+          LN->pv = tmp;
       }
   }
   Dlink *Dcopy ( Dlink *LN ) {
       Dlink *tmp;
       D_l *pt;
       tmp = Dopen ( ) ;
-      pt = LN-> st;
+      pt = LN->st;
       while ( pt != NULL ) {
-          Dadd ( tmp , pt-> bf ) ;
-          pt = pt-> nx;
+          Dadd ( tmp , pt->bf ) ;
+          pt = pt->nx;
       }
       return ( tmp ) ;
   }
@@ -284,10 +284,10 @@
           exit ( 0 ) ;
       }
       tmp = Dopen ( ) ;
-      pt = LN-> st;
+      pt = LN->st;
       while ( pt != NULL ) {
-          if ( Dcondition ( s , pt-> bf ) ) Dadd ( tmp , pt-> bf ) ;
-          pt = pt-> nx;
+          if ( Dcondition ( s , pt->bf ) ) Dadd ( tmp , pt->bf ) ;
+          pt = pt->nx;
       }
       return ( tmp ) ;
   }
@@ -302,13 +302,13 @@
           printf ( "Error: Empty list:Dsetcurpos\n" ) ;
           exit ( 0 ) ;
       }
-      pt = LN-> st;
+      pt = LN->st;
       while ( pt != NULL ) {
-          if ( Dcondition ( s , pt-> bf ) ) {
-              LN-> cr = pt;
+          if ( Dcondition ( s , pt->bf ) ) {
+              LN->cr = pt;
               return 1;
           }
-          pt = pt-> nx;
+          pt = pt->nx;
       }
       return 0;
   }
@@ -323,10 +323,10 @@
           exit ( 0 ) ;
       }
       tmp = Dopen ( ) ;
-      pt = LN-> st;
+      pt = LN->st;
       while ( pt != NULL ) {
-          Dadd ( tmp , Dnewrule ( pt-> bf ) ) ;
-          pt = pt-> nx;
+          Dadd ( tmp , Dnewrule ( pt->bf ) ) ;
+          pt = pt->nx;
       }
       return ( tmp ) ;
   }
@@ -352,23 +352,23 @@
           printf ( "Error: Empty list\n" ) ;
           exit ( 0 ) ;
       }
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return;
-      while ( tmp-> nx != NULL ) {
+      while ( tmp->nx != NULL ) {
           pos = tmp;
-          pt = tmp-> nx;
+          pt = tmp->nx;
           while ( pt != NULL ) {
-              if ( Dcmpitems ( pos-> bf , pt-> bf ) > 0 ) 
+              if ( Dcmpitems ( pos->bf , pt->bf ) > 0 ) 
                   { /* to be provided by user */ pos = pt;
               }
-              pt = pt-> nx;
+              pt = pt->nx;
           }
           if ( pos != tmp ) {
-              dum = tmp-> bf;
-              tmp-> bf = pos-> bf;
-              pos-> bf = dum;
+              dum = tmp->bf;
+              tmp->bf = pos->bf;
+              pos->bf = dum;
           }
-          tmp = tmp-> nx;
+          tmp = tmp->nx;
       }
   }
   void Dsort ( Dlink *LN , int Dcmpitems ( void *, void * ) ) {
@@ -378,41 +378,41 @@
           printf ( "Error: Empty listi:Dsort\n" ) ;
           exit ( 0 ) ;
       }
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return;
-      pt = tmp-> nx;
+      pt = tmp->nx;
       while ( pt != NULL ) {
-          pos = LN-> st;
+          pos = LN->st;
           while ( pos != pt ) {
-              if ( Dcmpitems ( pos-> bf , pt-> bf ) > 0 ) 
+              if ( Dcmpitems ( pos->bf , pt->bf ) > 0 ) 
                   { /* to be provided by user */ tmp1 = pt;
-                   ( pt-> pv ) -> nx = pt-> nx;
-                  if ( pt-> nx != NULL ) ( pt-> nx ) -> pv = pt-> pv;
-                  else LN-> en = pt-> pv;
-                  pt = pt-> nx;
-                  if ( pos-> pv != NULL ) ( pos-> pv ) -> nx = tmp1;
-                  tmp1-> pv = pos-> pv;
-                  pos-> pv = tmp1;
-                  tmp1-> nx = pos;
-                  if ( pos == LN-> st ) LN-> st = tmp1;
+                   ( pt->pv )->nx = pt->nx;
+                  if ( pt->nx != NULL ) ( pt->nx )->pv = pt->pv;
+                  else LN->en = pt->pv;
+                  pt = pt->nx;
+                  if ( pos->pv != NULL ) ( pos->pv )->nx = tmp1;
+                  tmp1->pv = pos->pv;
+                  pos->pv = tmp1;
+                  tmp1->nx = pos;
+                  if ( pos == LN->st ) LN->st = tmp1;
                   break;
               }
-              pos = pos-> nx;
+              pos = pos->nx;
           }
-          if ( pos == pt ) pt = pt-> nx;
+          if ( pos == pt ) pt = pt->nx;
       }
   }
 #define  Dintrchngpositions(LN,pos,pt) {\
   D_l *tmp1; \
       tmp1 = pt; \
-       ( pt-> pv ) -> nx = pt-> nx; \
-      if ( pt-> nx != NULL ) ( pt-> nx ) -> pv = pt-> pv; \
-      else LN-> en = pt-> pv; \
-      if ( pos-> pv != NULL ) ( pos-> pv ) -> nx = tmp1; \
-      tmp1-> pv = pos-> pv; \
-      pos-> pv = tmp1; \
-      tmp1-> nx = pos; \
-      if ( pos == LN-> st ) LN-> st = tmp1; \
+       ( pt->pv )->nx = pt->nx; \
+      if ( pt->nx != NULL ) ( pt->nx )->pv = pt->pv; \
+      else LN->en = pt->pv; \
+      if ( pos->pv != NULL ) ( pos->pv )->nx = tmp1; \
+      tmp1->pv = pos->pv; \
+      pos->pv = tmp1; \
+      tmp1->nx = pos; \
+      if ( pos == LN->st ) LN->st = tmp1; \
   }
   void Dsort_iter ( Dlink *LN , int Dcmpitems ( void *, void * ) ) {
       D_l *tmp , *pt , *pos , *tmp1;
@@ -423,36 +423,36 @@
           exit ( 0 ) ;
       }
       Item_comp = Dcmpitems;
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return;
-      pt = tmp-> nx;
+      pt = tmp->nx;
       if ( pt == NULL ) return;
       n++;
-      pos = LN-> st;
-      if ( Dcmpitems ( pos-> bf , pt-> bf ) > 0 ) { /* to be provided by user */ tmp1 = pt-> pv;
+      pos = LN->st;
+      if ( Dcmpitems ( pos->bf , pt->bf ) > 0 ) { /* to be provided by user */ tmp1 = pt->pv;
           
           Dintrchngpositions ( LN , pos , pt ) ;
           pt = tmp1;
       }
-      pt = pt-> nx;
+      pt = pt->nx;
       while ( pt != NULL ) {
           n++;
-          pos = LN-> st;
-          if ( Dcmpitems ( pos-> bf , pt-> bf ) > 0 ) { /* to be provided by user */ tmp1 = pt-> pv;
+          pos = LN->st;
+          if ( Dcmpitems ( pos->bf , pt->bf ) > 0 ) { /* to be provided by user */ tmp1 = pt->pv;
               
               Dintrchngpositions ( LN , pos , pt ) ;
               pt = tmp1;
           }
           else {
-              pos = pt-> pv;
-              if ( Dcmpitems ( pos-> bf , pt-> bf ) > 0 ) { /* to be provided by user */ tmp1 = pt-> pv;
+              pos = pt->pv;
+              if ( Dcmpitems ( pos->bf , pt->bf ) > 0 ) { /* to be provided by user */ tmp1 = pt->pv;
                   
                   cont1 = 1; cont2 = n-1;
                   cont3 = ( cont1+cont2 ) /2;
                   while ( cont1 != cont3 ) {
                       Dposition ( LN , cont3 ) ;
-                      tmp = LN-> cr;
-                      if ( Dcmpitems ( tmp-> bf , pt-> bf ) > 0 ) {
+                      tmp = LN->cr;
+                      if ( Dcmpitems ( tmp->bf , pt->bf ) > 0 ) {
                           pos = tmp; cont2 = cont3;
                       }
                       else { cont1 = cont3;}
@@ -462,7 +462,7 @@
                   pt = tmp1;
               }
           }
-          pt = pt-> nx;
+          pt = pt->nx;
       }
   }
 /*------------------------------------------------------
@@ -475,10 +475,10 @@
           printf ( "Error: Empty list:Dcount\n" ) ;
           exit ( 0 ) ;
       }
-      LN = F-> st;
+      LN = F->st;
       while ( LN != ( ( void * ) 0 ) ) {
           n++;
-          LN = LN-> nx;
+          LN = LN->nx;
       }
       return n;
   }
@@ -490,16 +490,16 @@
       int i = 0;
       D_l *LN;
       if ( F == NULL ) return;
-      LN = F-> st;
-      if ( n == 0 ) {F-> cr = F-> st; return;}
-      if ( LN == ( void * ) 0 ) {F-> cr = NULL; return;}
+      LN = F->st;
+      if ( n == 0 ) {F->cr = F->st; return;}
+      if ( LN == ( void * ) 0 ) {F->cr = NULL; return;}
       while ( LN != ( ( void * ) 0 ) ) {
           i++;
           if ( i == n ) break;
-          LN = LN-> nx;
+          LN = LN->nx;
       }
-      if ( LN == ( void * ) 0 ) LN = F-> en;
-      F-> cr = LN;
+      if ( LN == ( void * ) 0 ) LN = F->en;
+      F->cr = LN;
   }
 /*------------------------------------------------------
    Joining two links
@@ -517,11 +517,11 @@
         /*gprintf("Destination is NULL");*/
           return s;
       }
-      d-> cr = d-> en;
-      tmp = s-> st;
+      d->cr = d->en;
+      tmp = s->st;
       while ( tmp != NULL ) {
-          Dadd ( d , tmp-> bf ) ;
-          tmp = tmp-> nx;
+          Dadd ( d , tmp->bf ) ;
+          tmp = tmp->nx;
       }
       return d;
   }
@@ -533,11 +533,11 @@
   int Disum ( Dlink *LN , int Dsumitem ( void * ) ) {
       D_l *tmp;
       int sum = 0;
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) { return sum;}
       while ( tmp != NULL ) {
-          sum += Dsumitem ( tmp-> bf ) ;
-          tmp = tmp-> nx;
+          sum += Dsumitem ( tmp->bf ) ;
+          tmp = tmp->nx;
       }
       return sum;
   }
@@ -549,11 +549,11 @@
   float Dfsum ( Dlink *LN , float Dsumitem ( void * ) ) {
       D_l *tmp;
       float sum = 0;
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) { return sum;}
       while ( tmp != NULL ) {
-          sum += Dsumitem ( tmp-> bf ) ;
-          tmp = tmp-> nx;
+          sum += Dsumitem ( tmp->bf ) ;
+          tmp = tmp->nx;
       }
       return sum;
   }
@@ -565,11 +565,11 @@
   double Ddsum ( Dlink *LN , double Dsumitem ( void * ) ) {
       D_l *tmp;
       double sum = 0;
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return sum;
       while ( tmp != NULL ) {
-          sum += Dsumitem ( tmp-> bf ) ;
-          tmp = tmp-> nx;
+          sum += Dsumitem ( tmp->bf ) ;
+          tmp = tmp->nx;
       }
       return sum;
   }
@@ -577,12 +577,12 @@
       ( void *tmp1 , void *tmp2 ) ) {
       D_l *t1 , *t2;
       if ( Dcount ( L1 ) != Dcount ( L2 ) ) return 0;
-      t1 = L1-> st;
-      t2 = L2-> st;
+      t1 = L1->st;
+      t2 = L2->st;
       while ( t1 != NULL ) {
-          if ( comprecord ( t1-> bf , t2-> bf ) != 1 ) return 0;
-          t1 = t1-> nx;
-          t2 = t2-> nx;
+          if ( comprecord ( t1->bf , t2->bf ) != 1 ) return 0;
+          t1 = t1->nx;
+          t2 = t2->nx;
       }
       return 1;
   }
@@ -596,13 +596,13 @@
   int Dwrite ( Dlink *L , FILE *fp , int write_link ( FILE *f , void *buf ) ) {
       int count , i;
       D_l *tmp;
-      tmp = L-> st;
+      tmp = L->st;
       if ( tmp == NULL ) return 1;
       while ( tmp != NULL ) {
-          if ( write_link ( fp , tmp-> bf ) <= 0 ) {
+          if ( write_link ( fp , tmp->bf ) <= 0 ) {
               return -1;
           }
-          tmp = tmp-> nx;
+          tmp = tmp->nx;
       }
       return 1;
   }
@@ -633,14 +633,14 @@
       if ( ( fp = fopen ( flname , "wb" ) ) == NULL ) return 0;
       count = Dcount ( L ) ;
       if ( fwrite ( & count , sizeof ( int ) , 1 , fp ) <= 0 ) return -1;
-      tmp = L-> st;
+      tmp = L->st;
       while ( tmp != NULL ) {
-          if ( fwrite ( tmp-> bf , size_of_rec , 1 , fp ) <= 0 ) {
+          if ( fwrite ( tmp->bf , size_of_rec , 1 , fp ) <= 0 ) {
               fclose ( fp ) ;
               printf ( "Error: In Dwriteauto ... Count=%d\n" , count ) ;
               exit ( 0 ) ;
           }
-          tmp = tmp-> nx;
+          tmp = tmp->nx;
       }
       fclose ( fp ) ;
       return 1;
@@ -655,26 +655,26 @@
       D_l *tmp , *tmp1;
       char *pt , *pt1;
       int i = 0;
-      tmp = L-> st;
+      tmp = L->st;
       while ( tmp != NULL ) {
-          pt = ( char * ) ( tmp-> bf ) ;
-          if ( tmp != L-> en ) {
-              tmp1 = tmp-> nx;
+          pt = ( char * ) ( tmp->bf ) ;
+          if ( tmp != L->en ) {
+              tmp1 = tmp->nx;
               while ( tmp1 != NULL ) {
-                  pt1 = ( char * ) ( tmp1-> bf ) ;
+                  pt1 = ( char * ) ( tmp1->bf ) ;
                   for ( i = 0;i < size;i++ ) if ( pt [ i ] != pt1 [ i ] ) break;
                   if ( i == size ) {
-                      L-> cr = tmp1;
-                      if ( tmp1 == L-> en ) {
+                      L->cr = tmp1;
+                      if ( tmp1 == L->en ) {
                           Ddelete ( L ) ;
                           break;
                       } /* in case last one is deleted */ Ddelete ( L ) ;
-                      tmp1 = L-> cr;
+                      tmp1 = L->cr;
                   }
-                  else tmp1 = tmp1-> nx;
+                  else tmp1 = tmp1->nx;
               }
           }
-          tmp = tmp-> nx;
+          tmp = tmp->nx;
       }
       return 1;
   }
@@ -683,24 +683,24 @@
 ********************************************************/
   int Drmvdup_cond ( Dlink *L , int rule ( void *, void * ) ) {
       D_l *tmp , *tmp1;
-      tmp = L-> st;
+      tmp = L->st;
       while ( tmp != NULL ) {
-          if ( tmp != L-> en ) {
-              tmp1 = tmp-> nx;
+          if ( tmp != L->en ) {
+              tmp1 = tmp->nx;
               while ( tmp1 != NULL ) {
-                  if ( rule ( tmp-> bf , tmp1-> bf ) == 1 ) {
-                      L-> cr = tmp1;
-                      if ( tmp1 == L-> en ) {
+                  if ( rule ( tmp->bf , tmp1->bf ) == 1 ) {
+                      L->cr = tmp1;
+                      if ( tmp1 == L->en ) {
                           Ddelete ( L ) ;
                           break;
                       } /* in case last one is deleted */ Ddelete ( L ) ;
-                      tmp1 = L-> cr;
-                      if ( tmp1 == L-> en ) break;
+                      tmp1 = L->cr;
+                      if ( tmp1 == L->en ) break;
                   }
-                  else tmp1 = tmp1-> nx;
+                  else tmp1 = tmp1->nx;
               }
           }
-          tmp = tmp-> nx;
+          tmp = tmp->nx;
       }
       return 1;
   }
@@ -710,9 +710,9 @@
 ****************************************************************/
   void *Resetlink ( Dlink *L ) {
       if ( L == NULL ) return NULL;
-      if ( L-> st == NULL ) return NULL;
-      L-> cr = L-> st;
-      return L-> cr-> bf;
+      if ( L->st == NULL ) return NULL;
+      L->cr = L->st;
+      return L->cr->bf;
   }
 /****************************************************************
   getting current record and changing to next record
@@ -720,9 +720,9 @@
 *****************************************************************/
   void *Getrecord ( Dlink *L ) {
       void *tmp = NULL;
-      if ( ( L != NULL ) && ( L-> cr != NULL ) ) {
-          tmp = L-> cr-> bf;
-          L-> cr = L-> cr-> nx;
+      if ( ( L != NULL ) && ( L->cr != NULL ) ) {
+          tmp = L->cr->bf;
+          L->cr = L->cr->nx;
       }
       return tmp;
   }
@@ -732,9 +732,9 @@
 *****************************************************************/
   void *Getrecordrev ( Dlink *L ) {
       void *tmp = NULL;
-      if ( ( L != NULL ) && ( L-> cr != NULL ) ) {
-          tmp = L-> cr-> bf;
-          L-> cr = L-> cr-> pv;
+      if ( ( L != NULL ) && ( L->cr != NULL ) ) {
+          tmp = L->cr->bf;
+          L->cr = L->cr->pv;
       }
       return tmp;
   }
@@ -835,28 +835,28 @@
           printf ( "Error: Empty listi:Dsort\n" ) ;
           exit ( 0 ) ;
       }
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return;
-      pt = tmp-> nx;
+      pt = tmp->nx;
       while ( pt != NULL ) {
-          pos = LN-> st;
+          pos = LN->st;
           while ( pos != pt ) {
-              if ( Dcmpstring ( pos-> bf , pt-> bf , field , order ) > 0 ) {
+              if ( Dcmpstring ( pos->bf , pt->bf , field , order ) > 0 ) {
                   tmp1 = pt;
-                   ( pt-> pv ) -> nx = pt-> nx;
-                  if ( pt-> nx != NULL ) ( pt-> nx ) -> pv = pt-> pv;
-                  else LN-> en = pt-> pv;
-                  pt = pt-> nx;
-                  if ( pos-> pv != NULL ) ( pos-> pv ) -> nx = tmp1;
-                  tmp1-> pv = pos-> pv;
-                  pos-> pv = tmp1;
-                  tmp1-> nx = pos;
-                  if ( pos == LN-> st ) LN-> st = tmp1;
+                   ( pt->pv )->nx = pt->nx;
+                  if ( pt->nx != NULL ) ( pt->nx )->pv = pt->pv;
+                  else LN->en = pt->pv;
+                  pt = pt->nx;
+                  if ( pos->pv != NULL ) ( pos->pv )->nx = tmp1;
+                  tmp1->pv = pos->pv;
+                  pos->pv = tmp1;
+                  tmp1->nx = pos;
+                  if ( pos == LN->st ) LN->st = tmp1;
                   break;
               }
-              pos = pos-> nx;
+              pos = pos->nx;
           }
-          if ( pos == pt ) pt = pt-> nx;
+          if ( pos == pt ) pt = pt->nx;
       }
   }
 // a special sort for blank seperated string record
@@ -914,28 +914,28 @@
           printf ( "Error: Empty listi:Dsort\n" ) ;
           exit ( 0 ) ;
       }
-      tmp = LN-> st;
+      tmp = LN->st;
       if ( tmp == NULL ) return;
-      pt = tmp-> nx;
+      pt = tmp->nx;
       while ( pt != NULL ) {
-          pos = LN-> st;
+          pos = LN->st;
           while ( pos != pt ) {
-              if ( Dcmpnumber ( pos-> bf , pt-> bf , field , order ) > 0 ) {
+              if ( Dcmpnumber ( pos->bf , pt->bf , field , order ) > 0 ) {
                   tmp1 = pt;
-                   ( pt-> pv ) -> nx = pt-> nx;
-                  if ( pt-> nx != NULL ) ( pt-> nx ) -> pv = pt-> pv;
-                  else LN-> en = pt-> pv;
-                  pt = pt-> nx;
-                  if ( pos-> pv != NULL ) ( pos-> pv ) -> nx = tmp1;
-                  tmp1-> pv = pos-> pv;
-                  pos-> pv = tmp1;
-                  tmp1-> nx = pos;
-                  if ( pos == LN-> st ) LN-> st = tmp1;
+                   ( pt->pv )->nx = pt->nx;
+                  if ( pt->nx != NULL ) ( pt->nx )->pv = pt->pv;
+                  else LN->en = pt->pv;
+                  pt = pt->nx;
+                  if ( pos->pv != NULL ) ( pos->pv )->nx = tmp1;
+                  tmp1->pv = pos->pv;
+                  pos->pv = tmp1;
+                  tmp1->nx = pos;
+                  if ( pos == LN->st ) LN->st = tmp1;
                   break;
               }
-              pos = pos-> nx;
+              pos = pos->nx;
           }
-          if ( pos == pt ) pt = pt-> nx;
+          if ( pos == pt ) pt = pt->nx;
       }
   }
 /* i is position and starts from 0 */
@@ -1245,7 +1245,7 @@
 	 */
       PACTION *recv = ( ( PACTION * ) rec ) ;
 //	int val = *((int *) name);
-      char *field = recv-> Flag;;
+      char *field = recv->Flag;;
 	// field = ...
       return strcmp ( field , ( char * ) name ) ;
 //	return (recv - val);
