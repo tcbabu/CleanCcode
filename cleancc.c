@@ -17,7 +17,7 @@
       int i , j = 0;
       char *pt = NULL;
       int ret;
-      char buff [ 500 ] ;
+      char buff [ 5000 ] ;
       int count = 0;
       Tag [ 0 ] = '\0';
       pt = tmp;
@@ -74,7 +74,7 @@
       int i , j = 0;
       char *pt = NULL;
       int ret;
-      char buff [ 500 ] ;
+      char buff [ 5000 ] ;
       int ok = 1;
       Tag [ 0 ] = '\0';
       pt = tmp;
@@ -491,8 +491,8 @@
   }
 #else
   static int DADD ( Dlink *S , char *bf ) {
-      char buff [ 1000 ] ;
-      char buff1 [ 1000 ] ;
+      char buff [ 5000 ] ;
+      char buff1 [ 5000 ] ;
       char *fpt , *pt , *spt;
       int i;
       int len , maxlen;
@@ -664,7 +664,7 @@
   }
 #endif
   static Dlink *PreproPass2 ( void *tmp ) {
-      char buff [ 5000 ] ;
+      char buff [ 50000 ] ;
       Dlink *S = NULL;
       Dlink *Stmp = ( Dlink * ) tmp;
       int i = 0;
@@ -896,7 +896,7 @@
       return S;
   }
   Dlink *prepro ( char *flname ) {
-      char buff [ 50000 ] ;
+      char buff [ 100000 ] ;
       Dlink *S = Dreadfile ( flname ) ;
       char *bf , *pt , *fpt;
       char *sptr;
