@@ -119,7 +119,7 @@
       int i , j = 0;
       char *pt = NULL;
       int ret;
-      char buff [ 500 ] ;
+      char buff [ 5000 ] ;
       Tag [ 0 ] = '\0';
       pt = tmp;
       i = 0;
@@ -139,7 +139,7 @@
       return *ln;
   }
   static int CheckTag ( char *bf , char *Token ) {
-      char Tag [ 500 ] ;
+      char Tag [ 5000 ] ;
       char *pt;
       int ln;
       pt = bf;
@@ -165,7 +165,7 @@
       char *bf;
       char *pt , *fpt;
       int ln;
-      char Tag [ 500 ] ;
+      char Tag [ 5000 ] ;
       Dmove_back ( S , 1 ) ;
       bf = ( char * ) Getrecord ( S ) ;
       pt = bf;
@@ -176,6 +176,7 @@
           Dadd ( P , fpt ) ;
           while ( CheckTag ( bf , "D_CLEANCC" ) == 0 ) {
               bf = ( char * ) Getrecord ( S ) ;
+	      if(bf == NULL) break;
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
               Dadd ( P , fpt ) ;
@@ -184,7 +185,7 @@
       return 1;
   }
   static int CheckSyntax ( char *bf ) {
-      char Tag [ 500 ] ;
+      char Tag [ 5000 ] ;
       int ln;
       char *pt;
       int i = 0;
@@ -491,8 +492,8 @@
   }
 #else
   static int DADD ( Dlink *S , char *bf ) {
-      char buff [ 5000 ] ;
-      char buff1 [ 5000 ] ;
+      char buff [ 50000 ] ;
+      char buff1 [ 50000 ] ;
       char *fpt , *pt , *spt;
       int i;
       int len , maxlen;
@@ -588,6 +589,10 @@
           ( buff [ i-4 ] == ':' ) ) {
           buff [ i-4 ] = '\n';
           buff [ i-3 ] = '\0';
+	  fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
+          strcpy ( fpt , buff ) ;
+          Dadd ( S , fpt ) ;
+	  return 1;
       }
       blanks = 0;
       while ( buff [ blanks ] == ' ' ) blanks++;
@@ -874,7 +879,11 @@
                       }
                       buff [ i++ ] = *pt++;
                       if ( ( *pt != '\t' ) && ( *pt < ' ' ) ) {
-                          fprintf ( stderr , "Unclosed String: %s\n" , bf ) ;
+			   fprintf ( stderr , "Unclosed String: %s\n" , bf ) ;
+                           fprintf ( stderr , "   You may look for any ""'"" in"
+                                           " any of the comments; Sorry !!!\n"
+                                           "   And please change that , incase\n");
+
                           exit ( -1 ) ;
                       }
                   }
@@ -906,6 +915,7 @@
       while ( ( bf = ( char * ) Getrecord ( S ) ) != NULL ) {
           pt = bf;
 //	   printf("%s",bf);
+          if(pt[0]=='\n') continue;
           while ( ( *pt == ' ' ) || ( *pt == '\t' ) ) {
               pt++;
           }
@@ -950,6 +960,21 @@
           End = 0;
           while ( ( *pt != '\n' ) && ( *pt != '\0' ) ) {
 //             if( (*pt< ' ') && (*pt != '\t')) *pt=' ';
+             if(*pt =='\'') {
+                    pt++;
+                    while(*pt != '\'') {
+                            if(*pt=='\\')  pt++;
+                            pt++;
+                    }
+            }
+            if(*pt =='\"') {
+                    pt++;
+                    while(*pt != '\"'){
+                            if(*pt=='\\')  pt++;
+                            pt++;
+                    }
+            }
+
               if ( ( *pt == '/' ) && ( * ( pt+1 ) == '/' ) ) {
 #if 0
                   pt--;
@@ -966,10 +991,19 @@
           if ( End ) {
               while ( *pt != '\n' ) pt++;
               *pt = '\0';
+#if 0
               pt = ( char * ) malloc ( strlen ( bf ) +1+4 ) ;
               strcpy ( pt , bf ) ;
               strcat ( pt , ":::\n" ) ;
               Dadd ( P , pt ) ;
+#else
+              Strcat ( buff , sptr ) ;
+              strcat ( buff , ":::\n" ) ;
+              fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
+              strcpy ( fpt , buff ) ;
+              Dadd ( P , fpt ) ;
+#endif
+
               buff [ 0 ] = '\0';
               continue;
           }
@@ -1006,7 +1040,7 @@
           }
       }
       Dempty ( S ) ;
-//       Dwritefile (  P ,  "JUNK0" )  ;
+      Dwritefile (  P ,  "JUNK0" )  ;
       return PreproPass2 ( P ) ;
   }
 #define D_NOCLEANCC
