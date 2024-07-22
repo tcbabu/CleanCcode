@@ -161,11 +161,11 @@
       }
       else return 0;
   }
-  static int ProcessNoClean ( Dlink *S , Dlink *P ) {
+  static int ProcessNoClean_o ( Dlink *S , Dlink *P ) {
       char *bf;
       char *pt , *fpt;
       int ln;
-      char Tag [ 5000 ] ;
+      char Tag [ 50000 ] ;
       Dmove_back ( S , 1 ) ;
       bf = ( char * ) Getrecord ( S ) ;
       pt = bf;
@@ -181,6 +181,24 @@
               strcpy ( fpt , bf ) ;
               Dadd ( P , fpt ) ;
           }
+      }
+      return 1;
+  }
+  static int ProcessNoClean ( Dlink *S , Dlink *P ) {
+      char *bf;
+      char *pt , *fpt;
+      int ln;
+      char Tag [ 50000 ] ;
+      bf = ( char * ) Getrecord ( S ) ;
+      fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
+      strcpy ( fpt , bf ) ;
+      Dadd ( P , fpt ) ;
+      while ( CheckTag ( bf , "D_CLEANCC" ) == 0 ) {
+              bf = ( char * ) Getrecord ( S ) ;
+	      if(bf == NULL) break;
+              fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
+              strcpy ( fpt , bf ) ;
+              Dadd ( P , fpt ) ;
       }
       return 1;
   }
@@ -695,13 +713,15 @@
 //		  DADD(S,bf);
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
-              Dadd ( S , fpt ) ;
               while ( *pt != '\0' ) {
                   if ( *pt == '{' ) {nbrk++;Scond = 0;}
                   if ( *pt == '}' ) {nbrk--;Scond = 1;}
                   pt++;
               }
-              ProcessNoClean ( Stmp , S ) ;
+              Dadd ( S , fpt ) ;
+              if ( CheckTag ( bf , "D_NOCLEANCC" ) ) {
+                ProcessNoClean ( Stmp , S ) ;
+	      }
               continue;
           }
           if ( ( *fpt == '/' ) && ( * ( fpt+1 ) == '/' ) ) {
@@ -900,14 +920,25 @@
 //        Dwritefile (  S ,  "JUNK1" )  ;
       if ( nbrk != 0 ) {
           fprintf ( stderr , "Brackets({,}) not matching;\n" ) ;
+          fprintf ( stderr , "You may check your contitional code\n" ) ;
           exit ( -1 ) ;
       }
       return S;
   }
+  char GetEndChar(char *pt) {
+	  char echr,*fpt;
+	  if(pt==NULL) return '\0';
+	  fpt = pt;
+	  while(*fpt != '\n') fpt++;
+	  fpt--;
+	  while(*fpt==' ') fpt--;
+	  echr = *fpt;
+	  return echr;
+  }
   Dlink *prepro ( char *flname ) {
       char buff [ 100000 ] ;
       Dlink *S = Dreadfile ( flname ) ;
-      char *bf , *pt , *fpt;
+      char *bf , *pt , *fpt,echr;
       char *sptr;
       int End = 0;
       Dlink *P = Dopen ( ) ;
@@ -920,11 +951,23 @@
               pt++;
           }
           if ( *pt < ' ' ) continue;
+	  echr = GetEndChar(pt);
           if ( *pt == '#' ) {
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
               Dadd ( P , fpt ) ;
-              ProcessNoClean ( S , P ) ;
+              if ( CheckTag ( bf , "D_NOCLEANCC" ) ) {
+               ProcessNoClean ( S , P ) ;
+	      }
+	      echr = GetEndChar(fpt);
+	      while(echr == '\\') {
+		 bf = ( char * ) Getrecord ( S ) ;
+		 if(bf == NULL) break;
+                 fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
+                 strcpy ( fpt , bf ) ;
+                 Dadd ( P , fpt ) ;
+	         echr = GetEndChar(fpt);
+	      }
               continue;
           }
           if ( ( *pt == '/' ) && ( * ( pt+1 ) == '/' ) ) {
@@ -1040,7 +1083,7 @@
           }
       }
       Dempty ( S ) ;
-      Dwritefile (  P ,  "JUNK0" )  ;
+//      Dwritefile (  P ,  "JUNK0" )  ;
       return PreproPass2 ( P ) ;
   }
 #define D_NOCLEANCC
