@@ -8,11 +8,11 @@
   static char *OutFile = NULL;
   static char *PgrName = NULL;
 #define SHIFT { \
-  dpt [ 0 ] = '\0';\
-      for ( int n = 0;n < ( Shift-1 ) ;n++ ) \
-      { strcat ( dpt , SBUFF ) ; }\
-      for ( int n = 0;n < StartOffset;n++ ) strcat ( dpt , " " ) ;\
-  }
+   dpt [ 0 ] = '\0';\
+       for ( int n = 0;n < ( Shift-1 ) ;n++ ) \
+       { strcat ( dpt , SBUFF ) ; }\
+       for ( int n = 0;n < StartOffset;n++ ) strcat ( dpt , " " ) ;\
+   }
   static int GetBracketField ( char *tmp , char *Tag , int *ln ) {
       int i , j = 0;
       char *pt = NULL;
@@ -176,7 +176,7 @@
           Dadd ( P , fpt ) ;
           while ( CheckTag ( bf , "D_CLEANCC" ) == 0 ) {
               bf = ( char * ) Getrecord ( S ) ;
-	      if(bf == NULL) break;
+              if ( bf == NULL ) break;
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
               Dadd ( P , fpt ) ;
@@ -194,11 +194,11 @@
       strcpy ( fpt , bf ) ;
       Dadd ( P , fpt ) ;
       while ( CheckTag ( bf , "D_CLEANCC" ) == 0 ) {
-              bf = ( char * ) Getrecord ( S ) ;
-	      if(bf == NULL) break;
-              fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
-              strcpy ( fpt , bf ) ;
-              Dadd ( P , fpt ) ;
+          bf = ( char * ) Getrecord ( S ) ;
+          if ( bf == NULL ) break;
+          fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
+          strcpy ( fpt , bf ) ;
+          Dadd ( P , fpt ) ;
       }
       return 1;
   }
@@ -607,10 +607,10 @@
           ( buff [ i-4 ] == ':' ) ) {
           buff [ i-4 ] = '\n';
           buff [ i-3 ] = '\0';
-	  fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
+          fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
           strcpy ( fpt , buff ) ;
           Dadd ( S , fpt ) ;
-	  return 1;
+          return 1;
       }
       blanks = 0;
       while ( buff [ blanks ] == ' ' ) blanks++;
@@ -720,8 +720,8 @@
               }
               Dadd ( S , fpt ) ;
               if ( CheckTag ( bf , "D_NOCLEANCC" ) ) {
-                ProcessNoClean ( Stmp , S ) ;
-	      }
+                  ProcessNoClean ( Stmp , S ) ;
+              }
               continue;
           }
           if ( ( *fpt == '/' ) && ( * ( fpt+1 ) == '/' ) ) {
@@ -899,11 +899,9 @@
                       }
                       buff [ i++ ] = *pt++;
                       if ( ( *pt != '\t' ) && ( *pt < ' ' ) ) {
-			   fprintf ( stderr , "Unclosed String: %s\n" , bf ) ;
-                           fprintf ( stderr , "   You may look for any ""'"" in"
-                                           " any of the comments; Sorry !!!\n"
-                                           "   And please change that , incase\n");
-
+                          fprintf ( stderr , "Unclosed String: %s\n" , bf ) ;
+                          fprintf ( stderr , "   You may look for any ""'"" in" " any of the comments; Sorry !!!\n" "   And please change that , incase\n" ) ;
+                              
                           exit ( -1 ) ;
                       }
                   }
@@ -925,20 +923,20 @@
       }
       return S;
   }
-  char GetEndChar(char *pt) {
-	  char echr,*fpt;
-	  if(pt==NULL) return '\0';
-	  fpt = pt;
-	  while(*fpt != '\n') fpt++;
-	  fpt--;
-	  while(*fpt==' ') fpt--;
-	  echr = *fpt;
-	  return echr;
+  char GetEndChar ( char *pt ) {
+      char echr , *fpt;
+      if ( pt == NULL ) return '\0';
+      fpt = pt;
+      while ( *fpt != '\n' ) fpt++;
+      fpt--;
+      while ( *fpt == ' ' ) fpt--;
+      echr = *fpt;
+      return echr;
   }
   Dlink *prepro ( char *flname ) {
       char buff [ 100000 ] ;
       Dlink *S = Dreadfile ( flname ) ;
-      char *bf , *pt , *fpt,echr;
+      char *bf , *pt , *fpt , echr;
       char *sptr;
       int End = 0;
       Dlink *P = Dopen ( ) ;
@@ -946,28 +944,28 @@
       while ( ( bf = ( char * ) Getrecord ( S ) ) != NULL ) {
           pt = bf;
 //	   printf("%s",bf);
-          if(pt[0]=='\n') continue;
+          if ( pt [ 0 ] == '\n' ) continue;
           while ( ( *pt == ' ' ) || ( *pt == '\t' ) ) {
               pt++;
           }
           if ( *pt < ' ' ) continue;
-	  echr = GetEndChar(pt);
+          echr = GetEndChar ( pt ) ;
           if ( *pt == '#' ) {
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
               Dadd ( P , fpt ) ;
               if ( CheckTag ( bf , "D_NOCLEANCC" ) ) {
-               ProcessNoClean ( S , P ) ;
-	      }
-	      echr = GetEndChar(fpt);
-	      while(echr == '\\') {
-		 bf = ( char * ) Getrecord ( S ) ;
-		 if(bf == NULL) break;
-                 fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
-                 strcpy ( fpt , bf ) ;
-                 Dadd ( P , fpt ) ;
-	         echr = GetEndChar(fpt);
-	      }
+                  ProcessNoClean ( S , P ) ;
+              }
+              echr = GetEndChar ( fpt ) ;
+              while ( echr == '\\' ) {
+                  bf = ( char * ) Getrecord ( S ) ;
+                  if ( bf == NULL ) break;
+                  fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
+                  strcpy ( fpt , bf ) ;
+                  Dadd ( P , fpt ) ;
+                  echr = GetEndChar ( fpt ) ;
+              }
               continue;
           }
           if ( ( *pt == '/' ) && ( * ( pt+1 ) == '/' ) ) {
@@ -1003,21 +1001,20 @@
           End = 0;
           while ( ( *pt != '\n' ) && ( *pt != '\0' ) ) {
 //             if( (*pt< ' ') && (*pt != '\t')) *pt=' ';
-             if(*pt =='\'') {
-                    pt++;
-                    while(*pt != '\'') {
-                            if(*pt=='\\')  pt++;
-                            pt++;
-                    }
-            }
-            if(*pt =='\"') {
-                    pt++;
-                    while(*pt != '\"'){
-                            if(*pt=='\\')  pt++;
-                            pt++;
-                    }
-            }
-
+              if ( *pt == '\'' ) {
+                  pt++;
+                  while ( *pt != '\'' ) {
+                      if ( *pt == '\\' ) pt++;
+                      pt++;
+                  }
+              }
+              if ( *pt == '\"' ) {
+                  pt++;
+                  while ( *pt != '\"' ) {
+                      if ( *pt == '\\' ) pt++;
+                      pt++;
+                  }
+              }
               if ( ( *pt == '/' ) && ( * ( pt+1 ) == '/' ) ) {
 #if 0
                   pt--;
@@ -1046,7 +1043,6 @@
               strcpy ( fpt , buff ) ;
               Dadd ( P , fpt ) ;
 #endif
-
               buff [ 0 ] = '\0';
               continue;
           }
