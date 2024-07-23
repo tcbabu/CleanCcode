@@ -490,15 +490,16 @@
           ch = * ( pt ) ;
           *pt = '\0';
           len = strlen ( spt ) ;
-          fpt = ( char * ) malloc ( len+2+blanks ) ;
+          fpt = ( char * ) malloc ( len+6+blanks ) ;
           for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
           fpt [ blanks ] = '\0';
-          Strcat ( fpt , spt ) ;
-          strcat ( fpt , "\n" ) ;
-          Dadd ( S , fpt ) ;
           *pt = ch;
           spt = pt;
           len = strlen ( spt ) ;
+          Strcat ( fpt , spt ) ;
+	  if(len >lineup) strcat(fpt." \\");
+          strcat ( fpt , "\n" ) ;
+          Dadd ( S , fpt ) ;
           blanks = blanksplus;
       }
       fpt = ( char * ) malloc ( len+1+blanks ) ;
@@ -517,6 +518,7 @@
       int len , maxlen;
       int blanks , blanksplus;
       int linelow = 70 , lineup = 80 , size;
+      int semicol=0;
       i = 0;
       fpt = bf;
       while ( *fpt != '\n' ) {
@@ -588,6 +590,22 @@
                   buff [ i ] = *fpt;
               }
               break;
+#if 0
+              case ';':
+#if 1
+	      if ( (isalnum(*(fpt-1))) && (isalnum(fpt[1]))){
+		  buff[i++]=' ';
+                  buff [ i++ ] = *fpt;
+		  buff[i] = ' ';
+	      }
+              else {
+                  buff [ i ] = *fpt;
+              }
+#else
+              buff [ i ] = *fpt;
+#endif
+              break;
+#endif
               default:
               buff [ i ] = *fpt;
               break;
@@ -630,7 +648,15 @@
           i = 0;
           while ( i < size ) {
               ch = *pt;
-              if ( ch == '\n' ) break;
+              if ( ch == '\n' ){
+                  len = strlen ( spt ) ;
+                  fpt = ( char * ) malloc ( len+1+blanks ) ;
+                  for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
+                  fpt [ blanks ] = '\0';
+                  Strcat ( fpt , spt ) ;
+                  Dadd ( S , fpt ) ;
+                  return 1;
+	      }
               if ( ( ch == '"' ) || ( ch == '\'' ) ) {
                   i++;pt++;
                   while ( *pt != ch ) {
@@ -662,20 +688,23 @@
               }
               pt++;
           }
-          if ( *pt == ';' ) pt++;
+          if ( *pt == ';' ) {pt++;semicol=1;}
           if ( ( *pt == '|' ) && ( * ( pt-1 ) == '|' ) ) pt--;
           ch = * ( pt ) ;
           *pt = '\0';
           len = strlen ( spt ) ;
-          fpt = ( char * ) malloc ( len+2+blanks ) ;
+          fpt = ( char * ) malloc ( len+6+blanks ) ;
           for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
           fpt [ blanks ] = '\0';
           Strcat ( fpt , spt ) ;
-          strcat ( fpt , "\n" ) ;
-          Dadd ( S , fpt ) ;
           *pt = ch;
           spt = pt;
           len = strlen ( spt ) ;
+          i=0;
+	  while ( (spt[i]== ' ') || (spt[i]=='\t')) i++;
+	  if(!semicol) strcat (fpt," \\");
+          strcat ( fpt , "\n" ) ;
+          Dadd ( S , fpt ) ;
           blanks = blanksplus;
       }
       fpt = ( char * ) malloc ( len+1+blanks ) ;
@@ -708,9 +737,10 @@
       while ( ( bf = ( char * ) Getrecord ( Stmp ) ) != NULL ) {
           pt = bf;
           fpt = bf;
+//	  printf("%s",bf);
+//	  fflush(stdout);
           while ( ( *fpt == ' ' ) || ( *fpt == '\t' ) ) fpt++;
           if ( *fpt == '#' ) {
-//		  DADD(S,bf);
               fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
               strcpy ( fpt , bf ) ;
               while ( *pt != '\0' ) {
@@ -925,11 +955,14 @@
   }
   char GetEndChar ( char *pt ) {
       char echr , *fpt;
+      int i=0;
       if ( pt == NULL ) return '\0';
       fpt = pt;
-      while ( *fpt != '\n' ) fpt++;
+      i=0;
+      while ( *fpt != '\n' ) {fpt++;i++;}
       fpt--;
-      while ( *fpt == ' ' ) fpt--;
+      i--;
+      while ( (i>=0) &&(*fpt == ' ') ) {fpt--;i--;}
       echr = *fpt;
       return echr;
   }
