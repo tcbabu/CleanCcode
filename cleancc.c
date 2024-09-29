@@ -210,7 +210,7 @@
       char ch;
       pt = bf;
       GetNextTag ( pt , Tag , & ln ) ;
-      if ( ( strcmp ( Tag , "if" ) == 0 ) || ( strcmp ( Tag , "while" ) == 0 ) 
+      if ( ( strcmp ( Tag , "if" ) == 0 ) || ( strcmp ( Tag , "while" ) == 0 )  \
           || ( strcmp ( Tag , "for" ) == 0 ) ) {
           pt += ln;
           while ( *pt != '(' ) {
@@ -430,7 +430,7 @@
           Dadd ( S , fpt ) ;
           return 1;
       }
-      if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) && 
+      if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) &&  \
           ( buff [ i-4 ] == ':' ) ) {
           buff [ i-4 ] = '\n';
           buff [ i-3 ] = '\0';
@@ -463,7 +463,7 @@
               }
               i++;pt++;
           }
-          while ( ( *pt != '(' ) && ( *pt != '{' ) && 
+          while ( ( *pt != '(' ) && ( *pt != '{' ) &&  \
               ( *pt != '|' ) && ( *pt != ';' ) ) {
               ch = *pt;
               if ( ( ch == '"' ) || ( ch == '\'' ) ) {
@@ -497,7 +497,7 @@
           spt = pt;
           len = strlen ( spt ) ;
           Strcat ( fpt , spt ) ;
-	  if(len >lineup) strcat(fpt." \\");
+          if ( len > lineup ) strcat ( fpt." \\" ) ;
           strcat ( fpt , "\n" ) ;
           Dadd ( S , fpt ) ;
           blanks = blanksplus;
@@ -518,7 +518,7 @@
       int len , maxlen;
       int blanks , blanksplus;
       int linelow = 70 , lineup = 80 , size;
-      int semicol=0;
+      int semicol = 0;
       i = 0;
       fpt = bf;
       while ( *fpt != '\n' ) {
@@ -593,11 +593,11 @@
 #if 0
               case ';':
 #if 1
-	      if ( (isalnum(*(fpt-1))) && (isalnum(fpt[1]))){
-		  buff[i++]=' ';
+              if ( ( isalnum ( * ( fpt-1 ) ) ) && ( isalnum ( fpt [ 1 ] ) ) ) {
+                  buff [ i++ ] = ' ';
                   buff [ i++ ] = *fpt;
-		  buff[i] = ' ';
-	      }
+                  buff [ i ] = ' ';
+              }
               else {
                   buff [ i ] = *fpt;
               }
@@ -621,7 +621,7 @@
           Dadd ( S , fpt ) ;
           return 1;
       }
-      if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) && 
+      if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) &&  \
           ( buff [ i-4 ] == ':' ) ) {
           buff [ i-4 ] = '\n';
           buff [ i-3 ] = '\0';
@@ -648,7 +648,7 @@
           i = 0;
           while ( i < size ) {
               ch = *pt;
-              if ( ch == '\n' ){
+              if ( ch == '\n' ) {
                   len = strlen ( spt ) ;
                   fpt = ( char * ) malloc ( len+1+blanks ) ;
                   for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
@@ -656,7 +656,7 @@
                   Strcat ( fpt , spt ) ;
                   Dadd ( S , fpt ) ;
                   return 1;
-	      }
+              }
               if ( ( ch == '"' ) || ( ch == '\'' ) ) {
                   i++;pt++;
                   while ( *pt != ch ) {
@@ -666,7 +666,7 @@
               }
               i++;pt++;
           }
-          while ( ( *pt != '(' ) && ( *pt != '{' ) && 
+          while ( ( *pt != '(' ) && ( *pt != '{' ) &&  \
               ( *pt != '|' ) && ( *pt != ';' ) ) {
               ch = *pt;
               if ( ( ch == '"' ) || ( ch == '\'' ) ) {
@@ -688,7 +688,7 @@
               }
               pt++;
           }
-          if ( *pt == ';' ) {pt++;semicol=1;}
+          if ( *pt == ';' ) {pt++;semicol = 1;}
           if ( ( *pt == '|' ) && ( * ( pt-1 ) == '|' ) ) pt--;
           ch = * ( pt ) ;
           *pt = '\0';
@@ -700,9 +700,9 @@
           *pt = ch;
           spt = pt;
           len = strlen ( spt ) ;
-          i=0;
-	  while ( (spt[i]== ' ') || (spt[i]=='\t')) i++;
-	  if(!semicol) strcat (fpt," \\");
+          i = 0;
+          while ( ( spt [ i ] == ' ' ) || ( spt [ i ] == '\t' ) ) i++;
+          if ( ! semicol ) strcat ( fpt , " \\" ) ;
           strcat ( fpt , "\n" ) ;
           Dadd ( S , fpt ) ;
           blanks = blanksplus;
@@ -820,8 +820,8 @@
                ) {
                   char ch;
                   ch = buff [ i-1 ] ;
-                  if ( ( ch != ' ' ) && ( ch != '*' ) && ( ch != '/' ) && ( ch != '-' ) && 
-                      ( ch != '+' ) && ( ch != '<' ) && ( ch != '>' ) && ( ch != '|' ) && 
+                  if ( ( ch != ' ' ) && ( ch != '*' ) && ( ch != '/' ) && ( ch != '-' ) &&  \
+                      ( ch != '+' ) && ( ch != '<' ) && ( ch != '>' ) && ( ch != '|' ) &&  \
                       ( ch != '&' ) ) buff [ i++ ] = ' ';
                   if ( ( *pt == '=' ) || ( *pt == '<' ) || \
                    ( *pt == '>' ) || ( *pt == '!' ) || \
@@ -955,14 +955,14 @@
   }
   char GetEndChar ( char *pt ) {
       char echr , *fpt;
-      int i=0;
+      int i = 0;
       if ( pt == NULL ) return '\0';
       fpt = pt;
-      i=0;
+      i = 0;
       while ( *fpt != '\n' ) {fpt++;i++;}
       fpt--;
       i--;
-      while ( (i>=0) &&(*fpt == ' ') ) {fpt--;i--;}
+      while ( ( i >= 0 ) && ( *fpt == ' ' ) ) {fpt--;i--;}
       echr = *fpt;
       return echr;
   }
@@ -1081,7 +1081,7 @@
           }
           pt--;
           while ( *pt == ' ' ) pt--;
-          if ( ( *pt == ';' ) || ( *pt == ':' ) || ( *pt == '}' ) 
+          if ( ( *pt == ';' ) || ( *pt == ':' ) || ( *pt == '}' )  \
               || ( *pt == '{' ) || ( *pt == '\\' ) ) {
               pt++;
               *pt = '\n'; * ( pt+1 ) = '\0';
