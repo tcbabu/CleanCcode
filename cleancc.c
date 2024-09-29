@@ -161,29 +161,6 @@
       }
       else return 0;
   }
-  static int ProcessNoClean_o ( Dlink *S , Dlink *P ) {
-      char *bf;
-      char *pt , *fpt;
-      int ln;
-      char Tag [ 50000 ] ;
-      Dmove_back ( S , 1 ) ;
-      bf = ( char * ) Getrecord ( S ) ;
-      pt = bf;
-      if ( CheckTag ( bf , "D_NOCLEANCC" ) ) {
-          bf = ( char * ) Getrecord ( S ) ;
-          fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
-          strcpy ( fpt , bf ) ;
-          Dadd ( P , fpt ) ;
-          while ( CheckTag ( bf , "D_CLEANCC" ) == 0 ) {
-              bf = ( char * ) Getrecord ( S ) ;
-              if ( bf == NULL ) break;
-              fpt = ( char * ) malloc ( strlen ( bf ) +1 ) ;
-              strcpy ( fpt , bf ) ;
-              Dadd ( P , fpt ) ;
-          }
-      }
-      return 1;
-  }
   static int ProcessNoClean ( Dlink *S , Dlink *P ) {
       char *bf;
       char *pt , *fpt;
@@ -275,240 +252,6 @@
       return 1;
   }
 #if 0
-  static int DADD ( Dlink *S , char *bf ) {
-      char buff [ 1000 ] ;
-      char buff1 [ 1000 ] ;
-      char *fpt , *pt , *spt;
-      int i , j;
-      int len , maxlen;
-      int blanks , blanksplus;
-      int linelow = 70 , lineup = 80 , size;
-      i = 0;
-      fpt = bf;
-      while ( *fpt != '\n' ) {
-          switch ( *fpt ) {
-              case '-':
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '>' ) ) {
-                  if ( buff [ i - 1 ] == ' ' ) i--;
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  while ( fpt [ 1 ] == ' ' ) fpt++;
-              }
-              else if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-              else if ( ( fpt [ 1 ] == '>' ) ) {
-                  if ( buff [ i - 1 ] == ' ' ) i--;
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  while ( fpt [ 1 ] == ' ' ) fpt++;
-              }
-#if 1
-              else if ( fpt [ 1 ] == '-' ) {
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-#endif
-              else {
-                  j = i - 1;
-                  while ( ( j >= 0 ) && ( buff [ j ] == ' ' ) ) j--;
-                  if ( ( j < 0 ) || ( isalnum ( buff [ j ] ) ) ) {
-                      j = i - 1;
-                      if ( ( buff [ j ] != ' ' ) && ( fpt [ 1 ] != '-' ) ) buff [ i++ ] = ' ';
-                      if ( ( buff [ j ] == ' ' ) && ( fpt [ 1 ] == '-' ) ) {
-                          i--;
-                          buff [ i ] = *fpt;
-                          i++;
-                          fpt++;
-                      }
-                      buff [ i ] = *fpt;
-                      if ( ( fpt [ 1 ] != ' ' ) && ( fpt [ 1 ] != '-' ) ) buff [ i++ ] = ' ';
-                  }
-                  else buff [ i ] = *fpt;
-              }
-              break;
-              case '+':
-#if 0
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-#if 1
-              else if ( fpt [ 1 ] == '+' ) {
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-#endif
-              else if ( fpt [ 1 ] == '=' ) {
-                  buff [ i++ ] = *fpt;
-                  fpt++;
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-              else {
-                  j = i - 1;
-                  while ( ( j >= 0 ) && ( buff [ j ] == ' ' ) ) j--;
-                  if ( ( j < 0 ) || ( isalnum ( buff [ j ] ) ) ) {
-                      j = i - 1;
-                      if ( ( buff [ j ] != ' ' ) && ( fpt [ 1 ] != '+' ) ) buff [ i++ ] = ' ';
-                      if ( ( buff [ j ] == ' ' ) && ( fpt [ 1 ] == '+' ) ) {
-                          i--;
-                          buff [ i ] = *fpt;
-                          i++;
-                          fpt++;
-                      }
-                      buff [ i ] = *fpt;
-                      if ( ( fpt [ 1 ] != ' ' ) ) buff [ i++ ] = ' ';
-                  }
-                  else buff [ i ] = *fpt;
-              }
-#else 
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '+' ) ) {
-                  buff [ i ] = *fpt;
-              fpt++; }
-              else if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i ] = *fpt;
-              fpt++; }
-              else {
-                  buff [ i ] = *fpt;
-              }
-#endif
-              break;
-              case '%':
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-              else {
-                  buff [ i ] = *fpt;
-              }
-              break;
-              case '*':
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-              else {
-                  buff [ i ] = *fpt;
-              }
-              break;
-              case '/':
-              if ( ( fpt [ 1 ] == ' ' ) && ( fpt [ 2 ] == '=' ) ) {
-                  buff [ i ] = *fpt;
-                  fpt++;
-              }
-              else {
-                  buff [ i ] = *fpt;
-              }
-              break;
-              default:
-              buff [ i ] = *fpt;
-              break;
-          }
-          i++;
-          fpt++;
-      }
-      while ( buff [ i-1 ] == ' ' ) i--;
-      buff [ i++ ] = '\n'; buff [ i ] = '\0';
-      if ( buff [ i-2 ] == '\\' ) {
-          fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
-          strcpy ( fpt , buff ) ;
-          Dadd ( S , fpt ) ;
-          return 1;
-      }
-      if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) &&  \
-          ( buff [ i-4 ] == ':' ) ) {
-          buff [ i-4 ] = '\n';
-          buff [ i-3 ] = '\0';
-      }
-      blanks = 0;
-      while ( buff [ blanks ] == ' ' ) blanks++;
-      blanksplus = blanks+OffSet;
-      spt = buff+blanks;
-      len = strlen ( spt ) ;
-      while ( len > linelow ) {
-          char ch;
-          pt = spt;
-          size = linelow;
-          maxlen = strlen ( spt ) ;
-          if ( maxlen < lineup ) {
-              len = maxlen;
-              break;
-          }
-          if ( maxlen < 2*linelow ) size = maxlen/2;
-          i = 0;
-          while ( i < size ) {
-              ch = *pt;
-              if ( ch == '\n' ) break;
-              if ( ( ch == '"' ) || ( ch == '\'' ) ) {
-                  i++;pt++;
-                  while ( *pt != ch ) {
-                      if ( *pt == '\\' ) {i++;pt++;};
-                      i++;pt++;
-                  }
-              }
-              i++;pt++;
-          }
-          while ( ( *pt != '(' ) && ( *pt != '{' ) &&  \
-              ( *pt != '|' ) && ( *pt != ';' ) ) {
-              ch = *pt;
-              if ( ( ch == '"' ) || ( ch == '\'' ) ) {
-                  pt++;
-                  while ( *pt != ch ) {
-                      if ( *pt == '\\' ) {pt++;};
-                      pt++;
-                  }
-                  pt++;
-              }
-              if ( *pt == '\n' ) {
-                  len = strlen ( spt ) ;
-                  fpt = ( char * ) malloc ( len+1+blanks ) ;
-                  for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
-                  fpt [ blanks ] = '\0';
-                  Strcat ( fpt , spt ) ;
-                  Dadd ( S , fpt ) ;
-                  return 1;
-              }
-              pt++;
-          }
-          if ( *pt == ';' ) pt++;
-          if ( ( *pt == '|' ) && ( * ( pt-1 ) == '|' ) ) pt--;
-          ch = * ( pt ) ;
-          *pt = '\0';
-          len = strlen ( spt ) ;
-          fpt = ( char * ) malloc ( len+6+blanks ) ;
-          for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
-          fpt [ blanks ] = '\0';
-          *pt = ch;
-          spt = pt;
-          len = strlen ( spt ) ;
-          Strcat ( fpt , spt ) ;
-          if ( len > lineup ) strcat ( fpt." \\" ) ;
-          strcat ( fpt , "\n" ) ;
-          Dadd ( S , fpt ) ;
-          blanks = blanksplus;
-      }
-      fpt = ( char * ) malloc ( len+1+blanks ) ;
-      for ( i = 0;i < blanks;i++ ) fpt [ i ] = ' ';
-      fpt [ blanks ] = '\0';
-      Strcat ( fpt , spt ) ;
-      Dadd ( S , fpt ) ;
-      return 1;
-  }
 #else
   static int DADD ( Dlink *S , char *bf ) {
       char buff [ 50000 ] ;
@@ -615,12 +358,14 @@
       }
       while ( buff [ i-1 ] == ' ' ) i--;
       buff [ i++ ] = '\n'; buff [ i ] = '\0';
+#if 0
       if ( buff [ i-2 ] == '\\' ) {
           fpt = ( char * ) malloc ( strlen ( buff ) +1 ) ;
           strcpy ( fpt , buff ) ;
           Dadd ( S , fpt ) ;
           return 1;
       }
+#endif
       if ( ( buff [ i-2 ] == ':' ) && ( buff [ i-3 ] == ':' ) &&  \
           ( buff [ i-4 ] == ':' ) ) {
           buff [ i-4 ] = '\n';
@@ -667,7 +412,7 @@
               i++;pt++;
           }
           while ( ( *pt != '(' ) && ( *pt != '{' ) &&  \
-              ( *pt != '|' ) && ( *pt != ';' ) ) {
+              ( *pt != '|' ) && ( *pt != ';' ) &&(*pt != ',')) {
               ch = *pt;
               if ( ( ch == '"' ) || ( ch == '\'' ) ) {
                   pt++;
@@ -687,6 +432,10 @@
                   return 1;
               }
               pt++;
+          }
+          if(*pt == ',') {
+              pt++;
+//            printf("Got coma\n");
           }
           if ( *pt == ';' ) {pt++;semicol = 1;}
           if ( ( *pt == '|' ) && ( * ( pt-1 ) == '|' ) ) pt--;
